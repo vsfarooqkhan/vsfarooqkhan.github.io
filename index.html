@@ -395,7 +395,7 @@ s0.parentNode.insertBefore(s1,s0);
         		</div>
         	</div>
         </section>
-        
+		
         <!--================Home Gallery Area =================-->
  
         <!--================End Home Gallery Area =================-->
@@ -407,16 +407,26 @@ s0.parentNode.insertBefore(s1,s0);
         <footer class="footer_area p_120">
         	<div class="container">
         		<div class="row footer_inner">
-        			<div class="col-lg-5 col-sm-6">
+        			<div class="col-lg-5 col-sm-3">
         				<aside class="f_widget ab_widget">
         					<div class="f_title">
         						<h3>About Me</h3>
-        					</div>
+							</div>
+							<button onclick="showRepos()" class="btn btn-primary"> Show GitHub Repositories</button>
+							<div id = "gitHubRepoList">
+								
+							</div>
+							<button class= "btn btn-info" onclick="stackOverflow()"><i class="fa fa-stack-overflow"></i> stackoverflow Details</button>
+								<div id="stackOverFlow">
+						
+								</div>
         					<p>There is nothing more to tell about me . If you want to know more about me , <a href="mailto:contact@vsfarooqkhan.xyz">mail me here </a></p>
-        					<p>Copyright ©2019 All rights reserved |<i class="fa fa-heart-to"> </i>Farooq khan </p>
+							<p>Copyright ©2019 All rights reserved |<i class="fa fa-heart-to"> </i>Farooq khan </p>
         				</aside>
-        			</div>
-        			<div class="col-lg-5 col-sm-6">
+					</div>
+					
+						
+        			<div class="col-lg-5 col-sm-3">
         				<!--<aside class="f_widget news_widget">
         					<div class="f_title">
         						<h3>Newsletter</h3>
@@ -477,6 +487,71 @@ s0.parentNode.insertBefore(s1,s0);
         <script src="public/vendors/counter-up/jquery.waypoints.min.js"></script>
         <script src="public/vendors/counter-up/jquery.counterup.min.js"></script>
         <script src="public/js/mail-script.js"></script>
-        <script src="public/js/theme.js"></script>
+		<script src="public/js/theme.js"></script>
+		<script
+			src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"></script>
+		<script>
+			function showRepos() {
+				$( "#stackOverFlow" ).empty();
+				$( "#gitHubRepoList").empty();
+				$.ajaxSetup({
+				});
+				jQuery.ajax({
+					url: "https://api.github.com/users/vsfarooqkhan/repos",
+					method: 'get',
+					beforeSend: function(){
+						// Show image container
+						//$("#loader").show();
+						
+					},
+					success: function(data){
+						if(data){
+							var repoNames = [];
+							var repoUrl = [];
+							data.forEach(key => {
+								repoNames.push(key['name']);
+								repoUrl.push(key['html_url'])
+								if(key['fork'] == false) {
+									$("#gitHubRepoList").append('<a href="'+key['html_url']+'">'+key['name']+'</a><br/>');
+								}
+							});
+						}
+						$("#repoName").text(repoNames);
+						$("#repoUrl").text(repoUrl);
+						console.log(repoNames, repoUrl)
+					}
+				});
+			}
+			function stackOverflow() {
+				$( "#stackOverFlow" ).empty();
+				$( "#gitHubRepoList").empty();
+				$.ajaxSetup({
+				});
+				jQuery.ajax({
+					url: "https://api.stackexchange.com/2.2/users/8240120?order=desc&sort=reputation&site=stackoverflow",
+					method: 'get',
+					beforeSend: function(){
+						// Show image container
+						//$("#loader").show();
+						
+					},
+					success: function(data){
+						if(data){
+							var repoNames = [];
+							var repoUrl = [];
+							data.items.forEach(key => {
+								$("#stackOverFlow").append("<h3> Badges </h3><br/> <b> Bronze </b><label>"+key['badge_counts']['bronze']+" </label> <br/> <b> Silver </b><label>"+key['badge_counts']['silver']+" </label><br/> <b>Gold </b><label>"+key['badge_counts']['gold']+" </label><br/>")
+								$("#stackOverFlow").append("<h3> Reputation </h3> <label> "+key['reputation']+" </label><br/>")
+								$("#stackOverFlow").append("<h3> Joined : </h3> <label> "+new Date(key['creation_date']*1000).toLocaleString()+" </label><br/>")		
+								$("#stackOverFlow").append("<h3>Location : </h3> <label>"+key['location']+"</label> <br/>")
+								$("#stackOverFlow").append("<h3> Profile Link</h3><a href= "+key['link']+">stackoverflow.com/farooq</a>")						
+							});
+						}
+					}
+				});
+			}
+		</script>
     </body>
 </html>
