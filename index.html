@@ -340,7 +340,8 @@ s0.parentNode.insertBefore(s1,s0);
         			</div>
         		</div>
         	</div>
-        </section>
+		</section>
+		<section>
         <!--================End Feature Area =================-->
                 <!--================Feature Area =================-->
         <section class="feature_area p_120">
@@ -395,7 +396,16 @@ s0.parentNode.insertBefore(s1,s0);
         		</div>
         	</div>
         </section>
-		
+		<section class="feature_area p_120">
+			<div class="container">
+        		<div class="main_title">
+        			<h2>Blog Posts from  <a href="https://dev.to">Dev.to</a> (Using API)</h2>
+        			<p> </p>
+        		</div>
+				<div id="devPosts" class="form-group row col-md-12"></div>
+			</div>
+
+		</section>
         <!--================Home Gallery Area =================-->
  
         <!--================End Home Gallery Area =================-->
@@ -493,6 +503,31 @@ s0.parentNode.insertBefore(s1,s0);
 			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 			crossorigin="anonymous"></script>
 		<script>
+			$(document).ready(function() {
+				$( "#stackOverFlow" ).empty();
+				$( "#gitHubRepoList").empty();
+				$.ajaxSetup({
+				});
+				jQuery.ajax({
+					url: "https://dev.to/api/articles?username=vsfarooqkhan",
+					method: 'get',
+					beforeSend: function(){
+						// Show image container
+						//$("#loader").show();
+						
+					},
+					success: function(data){
+						if(data){
+							console.log(data)
+							var repoNames = [];
+							var repoUrl = [];
+							data.forEach(key => {
+									$("#devPosts").append('<div class="card col-md-4" > <img class="card-img-top" src="'+key['social_image']+'" alt="Card image"/><div class = "card-body"> <h5 class="card-title"><a href="'+key['url']+'" target="_blank">'+key['title']+'</a></h5> <p> Posted On : '+key['readable_publish_date']+' </p> <p> Reactions Count : '+key['positive_reactions_count']+'</p><a class="btn btn-primary" href="'+key['url']+'" target="_blank">Click To View</a><br/>');
+							});
+						}
+					}
+				});
+			});
 			function showRepos() {
 				$( "#stackOverFlow" ).empty();
 				$( "#gitHubRepoList").empty();
